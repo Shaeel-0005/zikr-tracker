@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Azkar Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* --- CSS Variables for Easy Theming --- */
+        :root {
+            --primary: #0d3b2e;
+            --primary-dark: #082a1f;
+            --accent: #2c5f4d;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #e0e0e0;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        /* --- Basic Reset & Body Styling --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f2 0%, #e8f5f0 100%);
+            color: #333;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* --- Header Styling --- */
+        .header {
+            text-align: center;
+            padding: 24px 16px;
+            background: linear-gradient(120deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(13, 59, 46, 0.2);
+        }
+
+        .header::before {
+            content: "🌙";
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* --- Main Content Card --- */
+        .card {
+            background: white;
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* --- Input Group & Form Elements --- */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .input-group input,
+        .input-group input[type="number"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(44, 95, 77, 0.15);
+            background-color: white;
+        }
+
+        /* --- Checkbox Section Styling --- */
+        .section {
+            background: #f9fbf9;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eef2ee;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+            accent-color: var(--accent);
+            border-radius: 6px;
+        }
+
+        .checkbox-item label {
+            font-size: 1rem;
+            color: #444;
+            cursor: pointer;
+        }
+
+        /* --- Button Styling --- */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(110deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(13, 59, 46, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(13, 59, 46, 0.4);
+            background: linear-gradient(110deg, var(--primary-dark), #1e503f);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        /* --- Footer Note --- */
+        .footer-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌙 Daily Report for <span id="studentName"></span></h1>
+            <p>Assalamu Alaikum! Please enter your amal for today.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <!-- New fields for day and day number -->
+                <div class="input-group">
+                    <label for="dayInput"><i class="fas fa-calendar-day"></i> Day</label>
+                    <input type="text" id="dayInput" placeholder="e.g., Monday">
+                </div>
+
+                <div class="input-group">
+                    <label for="dayNumberInput"><i class="fas fa-hashtag"></i> Day Number</label>
+                    <input type="text" id="dayNumberInput" placeholder="e.g., #01">
+                </div>
+                
+                <div class="input-group">
+                    <label for="azkarCount"><i class="fas fa-dharmachakra"></i> Azkar Count</label>
+                    <input type="number" id="azkarCount" value="300" min="0">
+                </div>
+
+                <!-- Checkbox sections -->
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-sun"></i> Suboḥ k Azkar</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item"><input type="checkbox" id="astagfar1" checked><label for="astagfar1">Astaghfar</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="phlaKalma1"><label for="phlaKalma1">Pehla Kalma</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="droodShrief1" checked><label for="droodShrief1">Durood Sharīf</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="tersraKalma1" checked><label for="tersraKalma1">Tisra Kalma</label></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-moon"></i> Sham k Azkar</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item"><input type="checkbox" id="astagfar2" checked><label for="astagfar2">Astaghfar</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="phlaKalma2"><label for="phlaKalma2">Pehla Kalma</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="droodShrief2"><label for="droodShrief2">Durood Sharīf</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="tersraKalma2" checked><label for="tersraKalma2">Tisra Kalma</label></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-mosque"></i> Nawāfil</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item"><input type="checkbox" id="tahajud" checked><label for="tahajud">Tahajjud</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="ishrak" checked><label for="ishrak">Ishrāq</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="chashat" checked><label for="chashat">Chāsht</label></div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="duaCount"><i class="fas fa-hands-praying"></i> Duʿā Count</label>
+                    <input type="number" id="duaCount" value="3" min="0">
+                </div>
+
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-shield-alt"></i> Hifāẓat</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item"><input type="checkbox" id="kaanKi" checked><label for="kaanKi">Kān kī</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="zubanKi" checked><label for="zubanKi">Zubān kī</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="ankhKi" checked><label for="ankhKi">Ānkh kī</label></div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="sendReport()">
+                    <i class="fab fa-whatsapp"></i> Send Report to Murābi
+                </button>
+
+                <p class="footer-note">
+                    <i class="fas fa-lock"></i> Sent securely via WhatsApp
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // This script now gets the data from the URL parameters directly
+    document.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const murabi = params.get('murabi') || '';
+        const student = params.get('student') || 'Student';
+
+        // Set the student's name in the header
+        document.getElementById('studentName').textContent = student;
+
+        // Make the sendReport function available globally
+        window.sendReport = function() {
+            const day = document.getElementById('dayInput').value.trim();
+            const dayNumber = document.getElementById('dayNumberInput').value.trim();
+            if (!day || !dayNumber) {
+                alert('📅 Please enter both Day and Day Number.');
+                return;
+            }
+
+            if (!murabi.trim()) {
+                alert('❌ Murabi number is missing from the link. Please contact your Murabi.');
+                return;
+            }
+
+            const azkarCount = document.getElementById('azkarCount').value;
+            const duaCount = document.getElementById('duaCount').value;
+            
+            // Morning azkar
+            const astagfar1 = document.getElementById('astagfar1').checked ? '✅' : '❌';
+            const phlaKalma1 = document.getElementById('phlaKalma1').checked ? '✅' : '❌';
+            const droodShrief1 = document.getElementById('droodShrief1').checked ? '✅' : '❌';
+            const tersraKalma1 = document.getElementById('tersraKalma1').checked ? '✅' : '❌';
+            
+            // Evening azkar
+            const astagfar2 = document.getElementById('astagfar2').checked ? '✅' : '❌';
+            const phlaKalma2 = document.getElementById('phlaKalma2').checked ? '✅' : '❌';
+            const droodShrief2 = document.getElementById('droodShrief2').checked ? '✅' : '❌';
+            const tersraKalma2 = document.getElementById('tersraKalma2').checked ? '✅' : '❌';
+            
+            // Nawafil
+            const tahajud = document.getElementById('tahajud').checked ? '✅' : '❌';
+            const ishrak = document.getElementById('ishrak').checked ? '✅' : '❌';
+            const chashat = document.getElementById('chashat').checked ? '✅' : '❌';
+            
+            // Hifazat
+            const kaanKi = document.getElementById('kaanKi').checked ? '✅' : '❌';
+            const zubanKi = document.getElementById('zubanKi').checked ? '✅' : '❌';
+            const ankhKi = document.getElementById('ankhKi').checked ? '✅' : '❌';
+
+            const message = `day = ${day}, ${dayNumber}
+Azkar count = ${azkarCount}
+
+Subo k Azkar: 
+ ${astagfar1} astagfar
+ ${phlaKalma1} phla kalma
+ ${droodShrief1} drood shrief
+ ${tersraKalma1} tersra kalma
+
+Sham k azkar
+ ${astagfar2} astagfar
+ ${phlaKalma2} phla kalma
+ ${droodShrief2} drood shrief
+ ${tersraKalma2} tersra kalma
+
+Nawafil:
+ ${tahajud} Tahajud
+ ${ishrak} Ishrak
+ ${chashat} Chashat
+
+Dua = ${duaCount}
+
+Hifazat
+ ${kaanKi} kaan ki
+ ${zubanKi} zuban ki
+ ${ankhKi} Ankh ki`;
+
+            // Your original working phone number logic
+            const cleanNumber = murabi.replace(/\D/g, '');
+            let numberWithCountryCode;
+            if (cleanNumber.startsWith('92')) {
+                numberWithCountryCode = cleanNumber;
+            } else if (cleanNumber.startsWith('0')) {
+                numberWithCountryCode = '92' + cleanNumber.substring(1);
+            } else {
+                numberWithCountryCode = '92' + cleanNumber;
+            }
+
+            const whatsappUrl = `https://wa.me/${numberWithCountryCode}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        };
+    });
+    </script>
+</body>
+</html>
